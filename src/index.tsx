@@ -62,6 +62,7 @@ function issueToken() {
         }).then((res) => {
           if (res.ok) {
             sessionStorage.clear(); // 세션 스토리지 클리어 후
+            document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location.href = "/"; // 메인 페이지로 이동
           }
         })

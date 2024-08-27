@@ -10,6 +10,7 @@ export async function logoutHandler() {
         withCredentials : true
     }).then((res)=>{
         sessionStorage.clear();
+        document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.href="/";
     }).catch((err)=>{
         console.log(err);

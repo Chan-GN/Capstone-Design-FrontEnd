@@ -24,19 +24,23 @@ const OAuth2 = () => {
 
       const verifier = sessionStorage.getItem("codeVerifier");
 
-      const initialUrl =
-        `${asUrl}/oauth2/token?client_id=client&redirect_uri=${feUrl}/authorized&grant_type=authorization_code`;
-      const url = `${initialUrl}&code=${code}&code_verifier=${verifier}`;
+      const body = new URLSearchParams();
+      body.append("client_id", "client");
+      body.append("grant_type", "authorization_code");
+      body.append("code", code);
+      body.append("redirect_uri", `${feUrl}/authorized`);
+      body.append("code_verifier", verifier);
 
-      console.log(verifier);
-      fetch(url, {
+      fetch(`${asUrl}/oauth2/token`, {
         method: "POST",
         mode: "cors",
-        headers,
-      })
-        .then(async (response) => {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": `Basic ${Buffer.from(`${client}:${secret}`).toString("base64")}`,
+        },
+        body: body.toString(),
+      }).then(async (response) => {
           const token = await response.json();
-
           if (token?.id_token && token?.access_token) {
             const now = new Date();
             const expiresIn = parseInt(token.expires_in);
